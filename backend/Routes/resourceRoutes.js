@@ -1,81 +1,113 @@
-const express = require('express');
+console.log("✅ resourceRoutes.js loaded");
+
+const express = require("express");
 const router = express.Router();
+const Resource = require("../models/Resource");
 
-
-//  GET all resources
-router.get('/', (req, res) => {
-  res.status(200).json([
-    { id: 1, name: "Community Food Pantry", category: "food" },
-    { id: 2, name: "Red Cross Blood Bank", category: "blood" }
-  ]);
-});
-// GET a single resource by ID
-router.get('/:id', (req, res) => {
-  const resourceId = req.params.id;
-
-  // Validation: ID should be a number (dummy logic for now)
-  if (isNaN(resourceId)) {
-    return res.status(400).json({ error: "Invalid resource ID format" });
-  }
-
-  // Dummy resource if id = 1
-  if (resourceId == 1) {
-    return res.status(200).json({ id: 1, name: "Community Food Pantry", category: "food" });
-  } else {
-    return res.status(404).json({ error: "Resource not found" });
+// GET all resources (only name, category, address, verified)
+router.get("/", async (req, res) => {
+  try {
+    const resources = await Resource.find({}, "name category address verified");
+    res.status(200).json(resources);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
-//  POST a new resource
-router.post('/', (req, res) => {
-  const { name, category, location, contact } = req.body;
-
-  // Validation: required fields
-  if (!name || !category) {
-    return res.status(400).json({ error: "Name and category are required" });
+// GET a single resource by ID (detailed fields)
+router.get("/:id", async (req, res) => {
+  try {
+    const resource = await Resource.findById(
+      req.params.id,
+      "name category verified image description phone mail availableAt"
+    );
+    if (!resource) {
+      return res.status(404).json({ error: "Resource not found" });
+    }
+    res.status(200).json(resource);
+  } catch (err) {
+    res.status(400).json({ error: "Invalid resource ID format" });
   }
+});
+// POST create a new resource
+router.post("/", async (req, res) => {
+  try {
+    const { name, description, mail, phone, address, availableAt, category, image } = req.body;
 
-  // Dummy success response
-  res.status(201).json({
-    message: "Resource added successfully",
-    resource: { id: Date.now(), name, category, location, contact }
-  });
+    // Validation: required fields
+    if (!name || !category) {
+      return res.status(400).json({ error: "Name and category are required" });
+    }
+
+    // Create new resource document
+    const newResource = new Resource({
+      name,
+      description,
+      mail,
+      phone,
+      address,
+      availableAt,
+      category,
+      image
+    });
+
+    await newResource.save();
+
+    res.status(201).json({
+      message: "Resource created successfully",
+      resource: newResource
+    });
+  } catch (err) {
+    res.status(400).json({ error: err.message || "Failed to create resource" });
+  }
 });
 
-//  PATCH verify resource
-router.patch('/:id/verify', (req, res) => {
-  const resourceId = req.params.id;
 
-  if (isNaN(resourceId)) {
-    return res.status(400).json({ error: "Invalid resource ID format" });
+// PATCH verify a resource
+router.patch("/:id/verify", async (req, res) => {
+  try {
+    const resource = await Resource.findByIdAndUpdate(
+      req.params.id,
+      { verified: true },
+      { new: true, fields: "name verified" }
+    );
+    if (!resource) {
+      return res.status(404).json({ error: "Resource not found" });
+    }
+    res.status(200).json({ message: "Resource verified", resource });
+  } catch (err) {
+    res.status(400).json({ error: "Invalid resource ID format" });
   }
-
-  // Dummy success response
-  res.status(200).json({ message: "Resource verified", verifiedCount: 1 });
 });
 
-//  PATCH flag resource
-router.patch('/:id/flag', (req, res) => {
-  const resourceId = req.params.id;
-
-  if (isNaN(resourceId)) {
-    return res.status(400).json({ error: "Invalid resource ID format" });
+// PATCH flag a resource
+router.patch("/:id/flag", async (req, res) => {
+  try {
+    const resource = await Resource.findByIdAndUpdate(
+      req.params.id,
+      { flagged: true },
+      { new: true, fields: "name flagged" }
+    );
+    if (!resource) {
+      return res.status(404).json({ error: "Resource not found" });
+    }
+    res.status(200).json({ message: "Resource flagged", resource });
+  } catch (err) {
+    res.status(400).json({ error: "Invalid resource ID format" });
   }
-
-  // Dummy success response
-  res.status(200).json({ message: "Resource flagged", flaggedCount: 1 });
 });
 
-//  DELETE a resource
-router.delete('/:id', (req, res) => {
-  const resourceId = req.params.id;
-
-  if (isNaN(resourceId)) {
-    return res.status(400).json({ error: "Invalid resource ID format" });
+// DELETE a resource
+router.delete("/:id", async (req, res) => {
+  try {
+    const resource = await Resource.findByIdAndDelete(req.params.id);
+    if (!resource) {
+      return res.status(404).json({ error: "Resource not found" });
+    }
+    res.status(200).json({ message: "Resource deleted successfully" });
+  } catch (err) {
+    res.status(400).json({ error: "Invalid resource ID format" });
   }
-
-  // Dummy delete success
-  res.status(200).json({ message: "Resource deleted successfully" });
 });
 
 module.exports = router;
