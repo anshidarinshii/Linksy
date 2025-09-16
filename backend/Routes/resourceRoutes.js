@@ -2,17 +2,23 @@ console.log("✅ resourceRoutes.js loaded");
 
 const express = require("express");
 const router = express.Router();
+const Category = require("../models/Category");
 const Resource = require("../models/Resource");
 
-// GET all resources (only name, category, address, verified)
-router.get("/", async (req, res) => {
+// GET all resources under a specific category
+router.get("/:id/resources", async (req, res) => {
   try {
-    const resources = await Resource.find({}, "name category address verified");
+    const { id } = req.params;
+
+    const resources = await Resource.find({ category: id })
+      .populate("category", "name description");
+
     res.status(200).json(resources);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
+
 
 // GET a single resource by ID (detailed fields)
 router.get("/:id", async (req, res) => {
@@ -20,7 +26,8 @@ router.get("/:id", async (req, res) => {
     const resource = await Resource.findById(
       req.params.id,
       "name category verified image description phone mail availableAt"
-    );
+    ).populate("category", "name description"); // ✅ fetch category details
+
     if (!resource) {
       return res.status(404).json({ error: "Resource not found" });
     }
@@ -29,7 +36,7 @@ router.get("/:id", async (req, res) => {
     res.status(400).json({ error: "Invalid resource ID format" });
   }
 });
-// POST create a new resource
+
 router.post("/", async (req, res) => {
   try {
     const { name, description, mail, phone, address, availableAt, category, image } = req.body;
@@ -37,6 +44,12 @@ router.post("/", async (req, res) => {
     // Validation: required fields
     if (!name || !category) {
       return res.status(400).json({ error: "Name and category are required" });
+    }
+
+    // ✅ Check if category exists
+    const categoryExists = await Category.findById(category);
+    if (!categoryExists) {
+      return res.status(400).json({ error: "Invalid category ID" });
     }
 
     // Create new resource document
@@ -47,7 +60,7 @@ router.post("/", async (req, res) => {
       phone,
       address,
       availableAt,
-      category,
+      category, // ✅ safe to store, since it’s a valid ObjectId
       image
     });
 
@@ -61,7 +74,6 @@ router.post("/", async (req, res) => {
     res.status(400).json({ error: err.message || "Failed to create resource" });
   }
 });
-
 
 // PATCH verify a resource
 router.patch("/:id/verify", async (req, res) => {
