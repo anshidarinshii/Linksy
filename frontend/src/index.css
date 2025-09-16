@@ -3,3 +3,9 @@
 body {
   @apply bg-white text-gray-900;
 }
+
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap");
+
+.font-logo {
+  font-family: "Montserrat", sans-serif;
+}

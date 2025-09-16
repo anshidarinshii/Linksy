@@ -1,48 +1,64 @@
-// frontend/src/pages/Home.jsx
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { fetchResources } from "../utils/api";
-import ResourceCard from "../components/ResourceCard";
+import { useEffect, useState } from 'react';
+import HeroCard from '../components/HeroCard.jsx';
+import ResourceCard from '../components/ResourceCard.jsx';
+import { fetchAllResources } from '../utils/api.js';
 
 export default function Home() {
-  const [resources, setResources] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+	const [resources, setResources] = useState([]);
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState('');
 
-  async function load() {
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await fetchResources();
-      setResources(data);
-    } catch (err) {
-      setError(err.message || "Failed to load resources");
-    } finally {
-      setLoading(false);
-    }
-  }
+	useEffect(() => {
+		setLoading(true);
+		setError('');
+		fetchAllResources()
+			.then((arr) => setResources(arr))
+			.catch((e) => setError(e.message || 'Failed to load resources'))
+			.finally(() => setLoading(false));
+	}, []);
 
-  useEffect(() => {
-    load();
-  }, []);
+	return (
+		<div className="min-h-screen">
+			<div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+				<div className="mt-6">
+					<HeroCard />
+				</div>
 
-  return (
-    <div className="page-home">
-      <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h1>Resources</h1>
-        <Link to="/add">
-          <button type="button">+ Add New Resource</button>
-        </Link>
-      </header>
+				<div className="mt-6">
+					<div className="flex items-center justify-between">
+						<h2 className="text-lg font-semibold">Resources</h2>
+						<span className="text-sm text-zinc-600 dark:text-zinc-400">{resources.length} found</span>
+					</div>
 
-      {loading && <p>Loading resources…</p>}
-      {error && <p style={{ color: "red" }}>Error: {error}</p>}
+					{loading && (
+						<div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+							{Array.from({ length: 6 }).map((_, i) => (
+								<div key={i} className="h-40 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-800 animate-pulse" />
+							))}
+						</div>
+					)}
 
-      {!loading && !error && resources.length === 0 && <p>No resources yet.</p>}
+					{!loading && error && (
+						<div className="mt-4 p-4 rounded-lg border border-red-200 bg-red-50 text-red-700">
+							{error}
+						</div>
+					)}
 
-      <section className="resource-grid">
-        {resources.map((r) => <ResourceCard key={r._id ?? r.id} resource={r} />)}
-      </section>
-    </div>
-  );
+					{!loading && !error && resources.length === 0 && (
+						<div className="mt-6 text-center p-8 rounded-xl border border-zinc-200 dark:border-zinc-800">
+							<p className="text-zinc-700 dark:text-zinc-300">No resources yet.</p>
+						</div>
+					)}
+
+					{!loading && !error && resources.length > 0 && (
+						<div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+							{resources.map((r) => (
+								<ResourceCard key={r._id || r.id} resource={r} />
+							))}
+						</div>
+					)}
+				</div>
+			</div>
+		</div>
+	);
 }
