@@ -1,9 +1,14 @@
-export default function ResourceCard({ name, category, address, contact }) {
+import React from "react";
+
+export default function ResourceCard({ resource }) {
+  // resource: { _id or id, name, category, location, contact, verified }
+  const id = resource._id ?? resource.id;
   return (
-    <article className="border rounded p-4 shadow-sm">
-      <h3 className="text-lg font-semibold">{name}</h3>
-      <p className="text-sm text-gray-600">{category} • {address}</p>
-      {contact && <p className="mt-2 text-sm">Contact: {contact}</p>}
+    <article data-id={id} className="resource-card">
+      <h3>{resource.name}</h3>
+      <p>{resource.category} {resource.location ? `• ${resource.location}` : ""}</p>
+      {resource.contact && <p>Contact: {resource.contact}</p>}
+      {resource.verified ? <small>Verified</small> : null}
     </article>
   );
 }
