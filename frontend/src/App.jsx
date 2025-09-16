@@ -14,7 +14,6 @@ const App = () => {
         <Navbar />
         <main className="flex-grow text-center text-purple-800 py-20">
           <h1 className="text-4xl font-bold">Welcome to Linksy</h1>
-          <p className="mt-4 text-lg">Your community resource platform</p>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/add" element={<AddResource />} />
