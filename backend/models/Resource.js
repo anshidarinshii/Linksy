@@ -8,11 +8,11 @@ const resourceSchema = new mongoose.Schema(
     phone: { type: String, trim: true },
     address: { type: String, trim: true },
     availableAt: { type: String, trim: true },
-    category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true }, // ✅ linked
+    category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
     image: { type: String, trim: true },
     verified: { type: Boolean, default: false },
     flagged: { type: Boolean, default: false },
-    contributedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" } // ✅ who added it
+    contributedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" }
   },
   { timestamps: true }
 );

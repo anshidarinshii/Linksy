@@ -1,34 +1,47 @@
 export default function ResourceCard({ resource }) {
+	const categoryLabel =
+		typeof resource?.category === "object"
+			? resource?.category?.name
+			: resource?.category;
+
 	return (
-		<div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 flex flex-col gap-3">
+		<div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4">
 			<div className="flex items-start justify-between gap-3">
-				<div>
-					<h3 className="font-semibold">{resource?.name}</h3>
-					<div className="mt-1 flex items-center gap-2">
-						{resource?.category && (
-							<span className="text-xs px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300">
-								{resource.category}
+				<div className="flex flex-col gap-2">
+					<div className="flex items-center gap-2 flex-wrap">
+						<h3 className="font-semibold">{resource?.name}</h3>
+
+						{categoryLabel && (
+							<span className="text-xs px-2 py-0.5 rounded-full border-2 border-blue-500/70 text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/20">
+								{categoryLabel}
 							</span>
 						)}
-						{resource?.verified && (
-							<span className="text-xs px-2 py-0.5 rounded bg-green-100 text-green-700">Verified</span>
-						)}
 					</div>
+
+					{/* ✅ Show Address / Location */}
+					{resource?.address && (
+						<p className="text-sm text-gray-600 dark:text-gray-400">
+							📍 {resource.address}
+						</p>
+					)}
+
+					{/* Or, if your backend uses "location" instead of "address" */}
+					{resource?.location && (
+						<p className="text-sm text-gray-600 dark:text-gray-400">
+							📍 {resource.location}
+						</p>
+					)}
 				</div>
-				{resource?.image && (
-					<img src={resource.image} alt={resource.name} className="w-16 h-16 rounded-lg object-cover border border-zinc-200 dark:border-zinc-800" loading="lazy" />
+
+				{resource?.verified ? (
+					<span className="text-xs px-2 py-0.5 rounded-full border-2 border-green-500/70 text-green-700 dark:text-green-300 bg-green-50 dark:bg-green-900/20">
+						Verified
+					</span>
+				) : (
+					<span className="text-xs px-2 py-0.5 rounded-full border-2 border-red-500/70 text-red-700 dark:text-red-300 bg-red-50 dark:bg-red-900/20">
+						Unverified
+					</span>
 				)}
-			</div>
-
-			{resource?.description && <p className="text-sm text-zinc-700 dark:text-zinc-300">{resource.description}</p>}
-
-			<div className="mt-1 space-y-1 text-sm">
-				{resource?.address && <p className="text-zinc-700 dark:text-zinc-300">{resource.address}</p>}
-				<div className="flex flex-wrap gap-3 text-zinc-600 dark:text-zinc-400">
-					{resource?.phone && <span>📞 {resource.phone}</span>}
-					{resource?.mail && <span>✉️ {resource.mail}</span>}
-					{resource?.availableAt && <span>🕒 {resource.availableAt}</span>}
-				</div>
 			</div>
 		</div>
 	);
