@@ -19,14 +19,14 @@ router.get("/:id/resources", async (req, res) => {
   }
 });
 
-
 // GET a single resource by ID (detailed fields)
 router.get("/:id", async (req, res) => {
   try {
+    // ❌ removed .populate()
     const resource = await Resource.findById(
       req.params.id,
       "name category verified image description phone mail availableAt"
-    ).populate("category", "name description"); // ✅ fetch category details
+    );
 
     if (!resource) {
       return res.status(404).json({ error: "Resource not found" });
