@@ -12,8 +12,7 @@ const App = () => {
     <BrowserRouter>
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-purple-50 via-purple-100 to-purple-200">
         <Navbar />
-        <main className="flex-grow text-center text-purple-800 py-20">
-          <h1 className="text-4xl font-bold">Welcome to Linksy</h1>
+        <main className="flex-grow text-center pt-6 text-purple-800 py-20">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/add" element={<AddResource />} />
