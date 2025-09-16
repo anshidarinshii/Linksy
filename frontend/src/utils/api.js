@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000";
+const API_BASE_URL = import.meta.env.VITE_API_BASE || "http://localhost:5000";
 
 export async function fetchResources() {
   const res = await fetch(`${API_BASE}/api/resources`);
@@ -17,4 +17,10 @@ export async function addResource(resource) {
     throw new Error(`Add failed: ${res.status} ${text}`);
   }
   return res.json();
+}
+export async function fetchAllResources() {
+  const res = await fetch(`${API_BASE_URL}/api/resources`);
+  if (!res.ok) throw new Error("Failed to fetch resources");
+  const json = await res.json();
+  return Array.isArray(json) ? json : (json.data || []);
 }
