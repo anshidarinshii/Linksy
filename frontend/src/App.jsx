@@ -5,13 +5,16 @@ import Home from "./pages/Home";
 import AddResource from "./pages/AddResource";
 import Map from "./pages/Map";
 import Profile from "./pages/Profile";
+import Footer from "./components/Footer";
 
 const App = () => {
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-purple-100 to-purple-200">
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-purple-50 via-purple-100 to-purple-200">
         <Navbar />
-        <main className="text-center text-purple-800 py-20">
+        <main className="flex-grow text-center text-purple-800 py-20">
+          <h1 className="text-4xl font-bold">Welcome to Linksy</h1>
+          <p className="mt-4 text-lg">Your community resource platform</p>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/add" element={<AddResource />} />
@@ -19,6 +22,7 @@ const App = () => {
             <Route path="/profile" element={<Profile />} />
           </Routes>
         </main>
+        <Footer />
       </div>
     </BrowserRouter>
   );
