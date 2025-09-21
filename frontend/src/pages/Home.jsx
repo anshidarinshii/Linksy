@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import HeroCard from '../components/HeroCard.jsx';
 import ResourceCard from '../components/ResourceCard.jsx';
 import { fetchAllResources } from '../utils/api.js';
+import MapPreview from '../components/MapPreview.jsx';
+
 
 export default function Home() {
 	const [resources, setResources] = useState([]);
@@ -23,10 +25,17 @@ export default function Home() {
 				<div className="mt-6">
 					<HeroCard />
 				</div>
+				<div className="mt-6">
+					<div className="flex items-center justify-between mb-2">
+						<h2 className="text-lg font-semibold">Explore Resources from Map</h2>
+					</div>
+					<MapPreview />
+				</div>
+
 
 				<div className="mt-6">
 					<div className="flex items-center justify-between">
-						<h2 className="text-lg font-semibold">Resources</h2>
+						<h2 className="text-lg font-semibold">Featured Resources</h2>
 						<span className="text-sm text-zinc-600 dark:text-zinc-400">{resources.length} found</span>
 					</div>
 
