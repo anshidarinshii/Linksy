@@ -1,14 +1,17 @@
+import { FaMapMarkerAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
-export default function ResourceCard({ resource }) {
-	const categoryLabel =
-		typeof resource?.category === "object"
-			? resource?.category?.name
-			: resource?.category;
 
+export default function ResourceCard({ resource }) {
+  const categoryLabel =
+    typeof resource?.category === "object"
+      ? resource?.category?.name
+      : resource?.category;
+  
+  
 	return (
 		<Link to={`api/resources/${resource._id || resource.id}`}>
-			<div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4">
+			<div className="group rounded-xl border border-zinc-200 bg-white p-4 transition-colors duration-300 hover:bg-purple-500 hover:text-white">
 				<div className="flex items-start justify-between gap-3">
 					<div className="flex flex-col gap-2">
 						<div className="flex items-center gap-2 flex-wrap">
@@ -24,14 +27,16 @@ export default function ResourceCard({ resource }) {
 						{/* ✅ Show Address / Location */}
 						{resource?.address && (
 							<p className="text-sm text-gray-600 dark:text-gray-400">
-								📍 {resource.address}
+								<FaMapMarkerAlt className="text-red-500 group-hover:text-white" />
+                {resource.location}
 							</p>
 						)}
 
 						{/* Or, if your backend uses "location" instead of "address" */}
 						{resource?.location && (
 							<p className="text-sm text-gray-600 dark:text-gray-400">
-								📍 {resource.location}
+                 <FaMapMarkerAlt className="text-red-500 group-hover:text-white" />
+								 {resource.location}
 							</p>
 						)}
 					</div>
