@@ -7,7 +7,7 @@ export async function fetchResources() {
 }
 
 export async function addResource(resource) {
-  const res = await fetch(`${API_BASE}/api/resources`, {
+  const res = await fetch(`${API_BASE_URL}/api/resources`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(resource),
@@ -23,4 +23,10 @@ export async function fetchAllResources() {
   if (!res.ok) throw new Error("Failed to fetch resources");
   const json = await res.json();
   return Array.isArray(json) ? json : (json.data || []);
+}
+
+export async function fetchResourceById(id) {
+  const res = await fetch(`${API_BASE_URL}/api/resources/${id}`);
+  if (!res.ok) throw new Error("Failed to fetch resource");
+  return res.json();
 }
