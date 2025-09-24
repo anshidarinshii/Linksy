@@ -8,7 +8,7 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
-  console.log("Rendering Navbar");
+
 
   return (
     <nav className="bg-white shadow-sm">
