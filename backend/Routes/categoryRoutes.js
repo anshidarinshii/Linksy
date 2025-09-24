@@ -59,4 +59,3 @@ router.get("/:id/resources", async (req, res) => {
 });
 
 module.exports = router;
-

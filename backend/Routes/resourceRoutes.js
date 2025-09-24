@@ -39,19 +39,16 @@ router.get("/", async (req, res) => {
 
 // GET /api/resources/:id - fetch a single resource by ID with detailed fields
 
+
+// GET /api/resources/:id - single resource
 router.get("/:id", async (req, res) => {
   try {
     // ❌ removed .populate()
     const resource = await Resource.findById(
-  req.params.id,
-  "name category verified address image description phone mail availableAt"
-);
-
-if (!resource) {
-  return res.status(404).json({ error: "Resource not found" });
-}
-
-
+      req.params.id,
+      "name category verified address image description phone mail availableAt"
+    );
+    if (!resource) return res.status(404).json({ error: "Resource not found" });
     res.status(200).json(resource);
   } catch {
     res.status(400).json({ error: "Invalid resource ID format" });
