@@ -1,7 +1,9 @@
 // backend/Routes/resourceRoutes.js
 const express = require("express");
 const router = express.Router();
+const authMiddleware = require("../middleware/authMiddleware");
 const Resource = require("../models/Resource");
+
 
 // GET /api/resources - list with simple filters + pagination
 router.get("/", async (req, res) => {
@@ -55,22 +57,28 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// POST /api/resources - create resource
-router.post("/", async (req, res) => {
+
+
+// POST /api/resources - only logged-in users can add
+router.post("/", authMiddleware, async (req, res) => {
   try {
-    const { name, description, mail, phone, address, availableAt, category, image } = req.body;
+    const { name, category } = req.body;
     if (!name || !category) {
       return res.status(400).json({ error: "Name and category are required" });
     }
+
     const newResource = new Resource({
-      name, description, mail, phone, address, availableAt, category, image
+      ...req.body,
+      createdBy: req.user.id,  // 👈 store user ID from JWT
     });
+
     await newResource.save();
-    res.status(201).json({ message: "Resource created successfully", resource: newResource });
+    res.status(201).json({ message: "Resource added", resource: newResource });
   } catch (err) {
-    res.status(400).json({ error: err.message || "Failed to create resource" });
+    res.status(500).json({ error: "Server error" });
   }
 });
+
 
 // PATCH /api/resources/:id/verify
 router.patch("/:id/verify", async (req, res) => {
