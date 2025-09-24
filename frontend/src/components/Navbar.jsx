@@ -60,34 +60,40 @@ const Navbar = () => {
               Login
             </button>
           ) : (
-            <div
-              className="relative"
-              onMouseEnter={() => setOpen(true)}
-              onMouseLeave={() => setOpen(false)}
-            >
-              <button className="text-purple-600 hover:text-purple-800"> 
-                <FiUser size={20} /> 
-                {user.name?.charAt(0).toUpperCase()}
-              </button>
-              {open && (
-                <div className="absolute right-0 mt-2 w-40 bg-white border rounded shadow p-2">
-                  <button
-                    onClick={() => navigate("/profile")}
-                    className="block w-full text-left px-2 py-1 hover:bg-purple-50 rounded"
-                  >
-                    Profile
-                  </button>
-                  <button
-                    onClick={() => { logout(); navigate("/"); }}
-                    className="block w-full text-left px-2 py-1 hover:bg-purple-50 rounded"
-                  >
-                    Logout
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
+              <div className="relative">
+                <button
+                  onClick={() => setOpen(!open)} // Toggle dropdown on click
+                  className="flex items-center space-x-1 text-purple-600 hover:text-purple-800"
+                >
+                  <FiUser size={20} />
+                  <span>{user.name?.charAt(0).toUpperCase()}</span>
+                </button>
 
+                {open && (
+                  <div className="absolute right-0 mt-2 w-40 bg-white border rounded shadow p-2 z-50">
+                    <button
+                      onClick={() => {
+                        setOpen(false);
+                        navigate("/profile");
+                      }}
+                      className="block w-full text-left px-2 py-1 hover:bg-purple-50 rounded"
+                    >
+                      Profile
+                    </button>
+                    <button
+                      onClick={() => {
+                        logout();
+                        setOpen(false);
+                        navigate("/");
+                      }}
+                      className="block w-full text-left px-2 py-1 hover:bg-purple-50 rounded"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+          )}
         </div>
       </div>
     </nav>

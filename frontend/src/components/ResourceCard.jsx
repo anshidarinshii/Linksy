@@ -28,15 +28,7 @@ export default function ResourceCard({ resource }) {
 						{resource?.address && (
 							<p className="text-sm text-gray-600 dark:text-gray-400">
 								<FaMapMarkerAlt className="text-red-500 group-hover:text-white" />
-                {resource.location}
-							</p>
-						)}
-
-						{/* Or, if your backend uses "location" instead of "address" */}
-						{resource?.location && (
-							<p className="text-sm text-gray-600 dark:text-gray-400">
-                 <FaMapMarkerAlt className="text-red-500 group-hover:text-white" />
-								 {resource.location}
+								{resource.address}
 							</p>
 						)}
 					</div>
