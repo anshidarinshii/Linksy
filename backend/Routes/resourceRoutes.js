@@ -37,10 +37,13 @@ router.get("/", async (req, res) => {
   }
 });
 
+// GET /api/resources/:id - fetch a single resource by ID with detailed fields
+
 
 // GET /api/resources/:id - single resource
 router.get("/:id", async (req, res) => {
   try {
+    // ❌ removed .populate()
     const resource = await Resource.findById(
       req.params.id,
       "name category verified address image description phone mail availableAt"

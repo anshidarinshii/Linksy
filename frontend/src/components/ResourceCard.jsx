@@ -53,6 +53,5 @@ export default function ResourceCard({ resource }) {
 				</div>
 			</div>
 		</Link>
-		
 	);
 }

@@ -4,7 +4,6 @@ import ResourceCard from '../components/ResourceCard.jsx';
 import { fetchAllResources } from '../utils/api.js';
 import MapPreview from '../components/MapPreview.jsx';
 
-
 export default function Home() {
 	const [resources, setResources] = useState([]);
 	const [loading, setLoading] = useState(false);
@@ -25,6 +24,7 @@ export default function Home() {
 				<div className="mt-6">
 					<HeroCard />
 				</div>
+
 				<div className="mt-6">
 					<div className="flex items-center justify-between mb-2">
 						<h2 className="text-lg font-semibold">Explore Resources from Map</h2>

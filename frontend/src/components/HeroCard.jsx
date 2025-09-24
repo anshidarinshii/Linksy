@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext"; // make sure you have AuthContext
 
@@ -20,7 +21,6 @@ export default function HeroCard() {
       <h2 className="text-lg font-bold font-serif text-purple-300">
         Connect Your Community. <br /> Discover Local Resources.
       </h2>
-
       <button
         onClick={handleAddResource}
         className="mt-6 px-6 py-3 bg-violet-600 text-white font-medium rounded-md shadow-md hover:bg-violet-700 hover:shadow-lg transition"
@@ -30,3 +30,4 @@ export default function HeroCard() {
     </div>
   );
 }
+

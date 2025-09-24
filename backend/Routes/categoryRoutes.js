@@ -49,8 +49,8 @@ router.get("/:id/resources", async (req, res) => {
   try {
     const { id } = req.params;
 
-    const resources = await Resource.find({ category: id })
-      .populate("category", "name description"); // show category details
+    // ❌ removed .populate()
+    const resources = await Resource.find({ category: id });
 
     res.status(200).json(resources);
   } catch (err) {
