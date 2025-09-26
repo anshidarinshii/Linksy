@@ -6,6 +6,7 @@ const resourceRoutes = require("./Routes/resourceRoutes");
 const authRoutes = require("./Routes/authRoutes");
 const profileRoutes = require("./Routes/profileRoutes");
 const categoryRoutes = require("./Routes/categoryRoutes");
+const adminRoutes = require("./Routes/adminRoutes");
 //const contributionRoutes = require("./Routes/contributionRoutes");
 //const feedbackRoutes = require("./Routes/feedbackRoutes");
 
@@ -22,7 +23,9 @@ app.use(express.json()); // required for POST body parsing
 app.use("/api/resources", resourceRoutes);  // ✅ this line connects routes
 app.use("/api/auth", authRoutes); 
 app.use("/api/profile", profileRoutes); 
-app.use("/api/categories", categoryRoutes);   // categories
+app.use("/api/categories", categoryRoutes);
+app.use("/api/admin", adminRoutes);
+ // categories
 //app.use("/api/contributions", contributionRoutes); // contribution logs
 //app.use("/api/feedbacks", feedbackRoutes);    // feedback system
 
