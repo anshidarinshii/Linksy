@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import AddResource from "./pages/AddResource";
 import Resources from "./pages/Resources";
 import ResourceDetail from "./pages/ResourceDetail";
+import AdminDashboard from "./pages/AdminDashboard";
 import Map from "./pages/Map";
 import Profile from "./pages/Profile";
 import Footer from "./components/Footer";
@@ -22,6 +23,7 @@ const App = () => {
           <main className="flex-grow text-center pt-6 text-purple-800 py-20">
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/resources" element={<Resources />} />
               <Route path="/resources/:id" element={<ResourceDetail />} />
               <Route path="/auth" element={<Auth />} />
