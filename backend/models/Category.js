@@ -8,7 +8,7 @@ const categorySchema = new mongoose.Schema(
       required: true,
       unique: true, // ensures no duplicate category names
       trim: true,
-    },
+    }, 
     description: {
       type: String,
       default: "",
