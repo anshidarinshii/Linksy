@@ -1,25 +1,9 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const contributionSchema = new mongoose.Schema({
-  resourceId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Resource',
-    required: true
-  },
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  action: {
-    type: String,
-    enum: ['add', 'update', 'verify'],
-    required: true
-  },
-  timestamp: {
-    type: Date,
-    default: Date.now
-  }
-});
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  resourceId: { type: mongoose.Schema.Types.ObjectId, ref: "Resource" },
+  action: { type: String, enum: ["add", "edit", "verify"], default: "add" }
+}, { timestamps: true });
 
-module.exports = mongoose.model('Contribution', contributionSchema);
+module.exports = mongoose.model("Contribution", contributionSchema);
