@@ -12,6 +12,7 @@ import Map from "./pages/Map";
 import Profile from "./pages/Profile";
 import Footer from "./components/Footer";
 import Auth from './pages/Auth';
+import SearchResults from "./pages/SearchResults";
 
 
 const App = () => {
@@ -26,6 +27,7 @@ const App = () => {
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/resources" element={<Resources />} />
               <Route path="/resources/:id" element={<ResourceDetail />} />
+              <Route path="/search" element={<SearchResults />} />
               <Route path="/auth" element={<Auth />} />
               <Route
                 path="/add-resource"

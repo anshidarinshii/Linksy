@@ -5,7 +5,7 @@ import * as authApi from "../utils/authApi"; // we'll create this file next
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(true);             // user object { id, name, email }
+  const [user, setUser] = useState(false);             // user object { id, name, email }
   const [loading, setLoading] = useState(true);       // while we check token at startup
 
   useEffect(() => {
@@ -33,15 +33,18 @@ export function AuthProvider({ children }) {
   const login = async (email, password) => {
     const res = await authApi.loginUser(email, password); // expects { token, user }
     localStorage.setItem("token", res.token);
+    localStorage.setItem("userId", res.user._id);
     setUser(res.user);
     return res;
   };
 
   const register = async (name, email, password) => {
     const res = await authApi.registerUser(name, email, password);
+    localStorage.setItem("token", res.token);
+    localStorage.setItem("userId", res.user._id);   // ✅ also save userId
+    setUser(res.user);
     return res;
   };
-
   const logout = () => {
     localStorage.removeItem("token");
     setUser(null);

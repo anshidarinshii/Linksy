@@ -1,21 +1,32 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { FiSearch } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
-export default function SearchBar({ onSearch }) {
-  const [q, setQ] = useState("");
+const SearchBar = () => {
+  const [search, setSearch] = useState("");
+  const navigate = useNavigate();
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (search.trim()) {
+      navigate(`/search?q=${encodeURIComponent(search)}`);
+    }
+  };
+
   return (
-    <div className="flex gap-2 items-center">
+    <form onSubmit={handleSearch} className="relative">
       <input
-        value={q}
-        onChange={(e) => setQ(e.target.value)}
+        type="text"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
         placeholder="Search resources..."
-        className="border rounded px-3 py-2 w-full"
+        className="px-3 py-2 rounded-lg border border-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-400 text-purple-700 placeholder-purple-400 w-48"
       />
-      <button
-        onClick={() => onSearch(q)}
-        className="px-4 py-2 bg-blue-600 text-white rounded"
-      >
-        Search
+      <button type="submit">
+        <FiSearch className="absolute right-3 top-2.5 text-purple-500" />
       </button>
-    </div>
+    </form>
   );
-}
+};
+
+export default SearchBar;

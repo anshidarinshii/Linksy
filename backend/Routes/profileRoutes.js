@@ -1,14 +1,17 @@
 // routes/profileRoutes.js
 const express = require("express");
+const bcrypt = require("bcryptjs");
 const Profile = require("../models/Profile");
 const Contribution = require("../models/Contributions");
 const Feedback = require("../models/Feedback");
 const Resource = require("../models/Resource");
+const User = require("../models/User");
+const { protect } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
 // ✅ Get full profile (bio + stats + resources + feedbacks)
-router.get("/:userId", async (req, res) => {
+router.get("/:userId", protect, async (req, res) => {
   try {
     const userId = req.params.userId;
 
@@ -34,24 +37,41 @@ router.get("/:userId", async (req, res) => {
   }
 });
 
-// ✅ Update profile info
-router.put("/:userId", async (req, res) => {
+// ✅ Update profile info (bio, pic, name, password)
+router.put("/:userId", protect, async (req, res) => {
   try {
-    const { bio, profilePicture } = req.body;
-    const updated = await Profile.findOneAndUpdate(
+    const { bio, profilePicture, name, password } = req.body;
+
+    // update Profile fields
+    const profile = await Profile.findOneAndUpdate(
       { user: req.params.userId },
       { bio, profilePicture },
       { new: true }
     ).populate("user", "-password");
 
-    res.json(updated);
+    // update User fields
+    const user = await User.findById(req.params.userId);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    if (name) user.name = name;
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(password, salt);
+    }
+    await user.save();
+
+    res.json({
+      message: "Profile updated successfully",
+      profile,
+      user: { _id: user._id, name: user.name, email: user.email }
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
 // ✅ Get contributions separately
-router.get("/:userId/contributions", async (req, res) => {
+router.get("/:userId/contributions", protect, async (req, res) => {
   try {
     const contributions = await Contribution.find({ userId: req.params.userId })
       .populate("resourceId");
@@ -62,7 +82,7 @@ router.get("/:userId/contributions", async (req, res) => {
 });
 
 // ✅ Get feedbacks separately
-router.get("/:userId/feedbacks", async (req, res) => {
+router.get("/:userId/feedbacks", protect, async (req, res) => {
   try {
     const feedbacks = await Feedback.find({ userId: req.params.userId })
       .populate("resourceId");
