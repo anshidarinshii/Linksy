@@ -1,3 +1,4 @@
+import axios from "axios";
 const API_BASE_URL = import.meta.env.VITE_API_BASE || "http://localhost:5000";
 
 export async function fetchResources() {
@@ -24,6 +25,12 @@ export async function fetchAllResources() {
   const json = await res.json();
   return Array.isArray(json) ? json : (json.data || []);
 }
+
+export const searchResources = async (q) => {
+  const res = await axios.get(`http://localhost:5000/api/resources/search?q=${q}`);
+  return res.data;
+};
+
 
 export async function fetchResourceById(id) {
   const res = await fetch(`${API_BASE_URL}/api/resources/${id}`);

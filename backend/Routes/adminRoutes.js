@@ -3,7 +3,7 @@ const User = require("../models/User");
 const Resource = require("../models/Resource");
 const { protect, adminOnly } = require("../middleware/authMiddleware");
 
-const router = express.Router();
+const router = express.Router();   // <-- you forgot this line
 
 // Get dashboard stats
 router.get("/stats", protect, adminOnly, async (req, res) => {
@@ -21,8 +21,23 @@ router.get("/stats", protect, adminOnly, async (req, res) => {
 router.get("/pending-resources", protect, adminOnly, async (req, res) => {
   try {
     const pending = await Resource.find({ status: "pending" })
-      .populate("submittedBy", "name email");
+      .populate("contributedBy", "name email");
     res.json(pending);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Verify a resource
+router.patch("/resources/:id/verify", protect, adminOnly, async (req, res) => {
+  try {
+    const resource = await Resource.findByIdAndUpdate(
+      req.params.id,
+      { verified: true, status: "approved" },
+      { new: true }
+    );
+    if (!resource) return res.status(404).json({ error: "Resource not found" });
+    res.json({ message: "Resource verified successfully", resource });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
