@@ -41,7 +41,9 @@ export default function ResourceDetail() {
           <h1 className="text-3xl font-bold text-purple-700">
             {resource.name}
           </h1>
-          <p className="text-sm text-gray-600">{categoryLabel}</p>
+          <p className="inline-block px-3 py-1 text-xs font-medium text-purple-700 bg-purple-100 rounded-full shadow-sm">
+            {categoryLabel}
+          </p>
         </div>
         {resource.verified ? (
           <span className="flex items-center text-green-600 font-semibold">
@@ -80,11 +82,11 @@ export default function ResourceDetail() {
         <div className="space-y-3">
           <p className="flex items-center">
             <FiMapPin className="mr-2 text-purple-500" />
-            <strong>Address:</strong> {resource.address || "N/A"}
+            <strong>Address: </strong> {resource.address || "N/A"}
           </p>
           <p className="flex items-center">
             <FiClock className="mr-2 text-purple-500" />
-            <strong>Available At:</strong> {resource.availableAt || "N/A"}
+            <strong>Available At: </strong> {resource.availableAt || "N/A"}
           </p>
         </div>
 
@@ -95,7 +97,7 @@ export default function ResourceDetail() {
           </p>
           <p className="flex items-center">
             <FiMail className="mr-2 text-purple-500" />
-            <strong>Email:</strong> {resource.mail || "N/A"}
+            <strong>Email: </strong> {resource.mail || "N/A"}
           </p>
         </div>
       </div>
@@ -105,7 +107,7 @@ export default function ResourceDetail() {
         <div className="mt-6 border-t pt-4">
           <p className="flex items-center text-gray-700">
             <FiUser className="mr-2 text-purple-500" />
-            <strong>Contributed by:</strong>{" "}
+            <strong>Contributed by: </strong>{" "}
             {resource.contributedBy?.name || "Anonymous"}
           </p>
         </div>
