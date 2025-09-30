@@ -9,6 +9,7 @@ const categoryRoutes = require("./Routes/categoryRoutes");
 const adminRoutes = require("./Routes/adminRoutes");
 const contributionRoutes = require("./Routes/contributionRoutes");
 const feedbackRoutes = require("./Routes/feedbackRoutes");
+const path = require("path");
 
 console.log("✅ Loaded authRoutes from ./Routes/authRoutes");
 
@@ -17,6 +18,8 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors()); // allow all origins for now
 app.use(express.json()); // required for POST body parsing
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 
 // Routes
 

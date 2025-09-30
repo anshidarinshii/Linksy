@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { protect, adminOnly } = require("../middleware/authMiddleware");
 const Resource = require("../models/Resource");
+const Category = require("../models/Category");
 
 // ----------------------------
 // GET /api/resources
@@ -9,7 +10,7 @@ const Resource = require("../models/Resource");
 // ----------------------------
 router.get("/", async (req, res) => {
   try {
-    const { page = 1, limit = 12, q = "", category = "", verified = "" } = req.query;
+    const { page = 1, limit = 12, q = "", category = "", verified = "", contributedBy = "" } = req.query;
 
     const pageNum = Math.max(1, parseInt(page, 10) || 1);
     const limitNum = Math.max(1, Math.min(50, parseInt(limit, 10) || 12));
@@ -24,10 +25,11 @@ router.get("/", async (req, res) => {
     }
     if (category) filter.category = category;
     if (verified === "true") filter.verified = true;
+    if (contributedBy) filter.contributedBy = contributedBy;
 
     const [data, total] = await Promise.all([
       Resource.find(filter)
-        .select("name category verified address")
+        .select("name category verified address contributedBy")
         .populate("category", "name"),
       Resource.countDocuments(filter)
     ]);
@@ -39,6 +41,8 @@ router.get("/", async (req, res) => {
   }
 });
 
+
+//search resources
 
 router.get("/search", async (req, res) => {
   try {
@@ -59,22 +63,22 @@ router.get("/search", async (req, res) => {
   }
 });
 
-// ----------------------------
 // GET /api/resources/:id
-// Public - fetch a single resource by ID
-// ----------------------------
 router.get("/:id", async (req, res) => {
   try {
-    const resource = await Resource.findById(
-      req.params.id,
-      "name category verified address image description phone mail availableAt"
-    );
+    const resource = await Resource.findById(req.params.id)
+      .populate("category", "name") // ✅ only category name
+      .populate("contributedBy", "name"); // ✅ user info
+
     if (!resource) return res.status(404).json({ error: "Resource not found" });
+
     res.status(200).json(resource);
   } catch {
     res.status(400).json({ error: "Invalid resource ID format" });
   }
 });
+
+
 
 
 
@@ -84,23 +88,42 @@ router.get("/:id", async (req, res) => {
 // ----------------------------
 router.post("/", protect, async (req, res) => {
   try {
-    const { name, category } = req.body;
+    const { name, category, description, mail, phone, address, availableAt, image } = req.body;
     if (!name || !category) {
       return res.status(400).json({ error: "Name and category are required" });
     }
 
+    // 🔑 Find category by name, or create new if it doesn't exist
+    let categoryDoc = await Category.findOne({ name: category });
+    if (!categoryDoc) {
+      categoryDoc = new Category({ name: category });
+      await categoryDoc.save();
+    }
+
     const newResource = new Resource({
-      ...req.body,
-      createdBy: req.user.id, // user ID from JWT
+      name,
+      description,
+      mail,
+      phone,
+      address,
+      availableAt,
+      category: categoryDoc._id, // ✅ store ObjectId
+      image,
+      contributedBy: req.user.id, // from JWT
     });
 
     await newResource.save();
-    res.status(201).json({ message: "Resource added", resource: newResource });
+
+    // populate category for response
+    const populatedResource = await Resource.findById(newResource._id).populate("category", "name");
+
+    res.status(201).json({ message: "Resource added", resource: populatedResource });
   } catch (err) {
     console.error("❌ Error creating resource:", err.message);
     res.status(500).json({ error: "Server error" });
   }
 });
+
 
 // ----------------------------
 // PATCH /api/resources/:id/verify

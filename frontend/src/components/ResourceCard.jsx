@@ -8,7 +8,7 @@ export default function ResourceCard({ resource }) {
       : resource?.category;
 
   return (
-    <Link to={`/api/resources/${resource._id || resource.id}`}>
+    <Link to={`/resources/${resource._id || resource.id}`}>  {/* ✅ fixed route */}
       {/* Reduced card height (h-28 = 7rem tall) */}
       <div className="group relative h-28 flex flex-col rounded-xl border border-zinc-200 bg-white p-3 transition-colors duration-300 hover:bg-purple-500 hover:text-white">
         {/* Main Content */}

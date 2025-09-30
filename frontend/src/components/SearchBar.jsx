@@ -6,12 +6,14 @@ const SearchBar = () => {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (search.trim()) {
-      navigate(`/search?q=${encodeURIComponent(search)}`);
-    }
-  };
+const handleSearch = (e) => {
+  e.preventDefault();
+  if (search.trim()) {
+    console.log("Navigating to:", `/search?q=${search}`);
+    navigate(`/search?q=${encodeURIComponent(search)}`);
+  }
+};
+
 
   return (
     <form onSubmit={handleSearch} className="relative">

@@ -38,9 +38,10 @@ const AdminDashboard = () => {
       await axios.patch(
         `http://localhost:5000/api/admin/resources/${id}/${action}`,
         {},
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token} `} }
       );
 
+      // remove the updated resource from the list
       setPendingResources(pendingResources.filter((r) => r._id !== id));
     } catch (err) {
       console.error("Error updating resource:", err);
@@ -63,10 +64,6 @@ const AdminDashboard = () => {
           <p className="text-xl font-bold">{stats.totalUsers}</p>
           <p>Total Users</p>
         </div>
-        <div className="bg-white shadow p-4 rounded text-center">
-          <p className="text-xl font-bold">{stats.activeModerators}</p>
-          <p>Active Moderators</p>
-        </div>
       </div>
 
       {/* Pending Resources */}
@@ -87,15 +84,21 @@ const AdminDashboard = () => {
               {pendingResources.map((r) => (
                 <tr key={r._id}>
                   <td className="p-2 border">{r.name}</td>
-                  <td className="p-2 border">{r.category}</td>
-                  <td className="p-2 border">{r.submittedBy?.name}</td>
+                  <td className="p-2 border">{r.category?.name || "N/A"}</td>
+                  <td className="p-2 border">{r.contributedBy?.name || "N/A"}</td>
                   <td className="p-2 border">{new Date(r.createdAt).toLocaleDateString()}</td>
                   <td className="p-2 border space-x-2">
+                    <button
+                      onClick={() => handleAction(r._id, "verify")}
+                      className="px-3 py-1 bg-blue-500 text-white rounded"
+                    >
+                      Verify
+                    </button>
                     <button
                       onClick={() => handleAction(r._id, "approve")}
                       className="px-3 py-1 bg-green-500 text-white rounded"
                     >
-                      Verify
+                      Approve
                     </button>
                     <button
                       onClick={() => handleAction(r._id, "reject")}
