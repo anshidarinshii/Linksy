@@ -30,7 +30,7 @@ const App = () => {
               <Route path="/search" element={<SearchResults />} />
               <Route path="/auth" element={<Auth />} />
               <Route
-                path="/add-resource"
+                path="/add"
                 element={
                 <RequireAuth>
                   <AddResource />
