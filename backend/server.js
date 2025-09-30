@@ -7,10 +7,9 @@ const authRoutes = require("./Routes/authRoutes");
 const profileRoutes = require("./Routes/profileRoutes");
 const categoryRoutes = require("./Routes/categoryRoutes");
 const adminRoutes = require("./Routes/adminRoutes");
+const contributionRoutes = require("./Routes/contributionRoutes");
+const feedbackRoutes = require("./Routes/feedbackRoutes");
 const path = require("path");
-
-//const contributionRoutes = require("./Routes/contributionRoutes");
-//const feedbackRoutes = require("./Routes/feedbackRoutes");
 
 console.log("✅ Loaded authRoutes from ./Routes/authRoutes");
 
@@ -29,9 +28,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes); 
 app.use("/api/categories", categoryRoutes);
 app.use("/api/admin", adminRoutes);
- // categories
-//app.use("/api/contributions", contributionRoutes); // contribution logs
-//app.use("/api/feedbacks", feedbackRoutes);    // feedback system
+app.use("/api/contributions", contributionRoutes); // contribution logs
+app.use("/api/feedbacks", feedbackRoutes);    // feedback system
 
 
 async function startServer() {
