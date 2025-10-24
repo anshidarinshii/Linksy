@@ -45,7 +45,6 @@ const App = () => {
         </div>
     </BrowserRouter>
     </AuthProvider>
-    
   );
 };
 
